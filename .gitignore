@@ -129,3 +129,7 @@ dmypy.json
 .pyre/
 
 .idea
+.env.*
+elasticsearch/snapshot_cache
+elasticsearch/nodes
+elasticsearch/*.lock

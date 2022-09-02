@@ -12,4 +12,4 @@ COPY /src .
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-CMD python3 manage.py runserver $DJANGO_HOST:$DJANGO_PORT
+CMD gunicorn --workers 3 --bind $DJANGO_HOST:$DJANGO_PORT settings.wsgi:application

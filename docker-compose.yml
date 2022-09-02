@@ -1,0 +1,88 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file: .env.prod
+    ports:
+      - "80:80"
+      - "45981:45981"
+    depends_on:
+      - elasticsearch
+    volumes:
+      - "./data:/root/data"
+    networks:
+      tm:
+
+  elasticsearch:
+    image: elasticsearch:${ELASTIC_VERSION}
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+      - ./elasticsearch:/usr/share/elasticsearch/data:z
+    restart: always
+    env_file: .env.prod
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      resources:
+        limits:
+          memory: 4096m
+        reservations:
+          memory: 4096m
+    cap_add:
+      - IPC_LOCK
+    networks:
+      tm:
+
+  kibana:
+    image: kibana:${ELASTIC_VERSION}
+    env_file: .env.prod
+    volumes:
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
+    ports:
+      - "5601:5601"
+    restart: always
+    networks:
+      tm:
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: logstash:${ELASTIC_VERSION}
+    env_file: .env.prod
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
+    restart: always
+    ports:
+      - "5044:5044"
+      - "50000:50000/tcp"
+      - "50000:50000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: -Xms256m -Xmx256m
+    networks:
+      - tm
+    depends_on:
+      - elasticsearch
+
+networks:
+  tm:
+    driver: bridge
+
+volumes:
+  elastic:
+  tm:
