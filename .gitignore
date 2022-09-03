@@ -133,3 +133,5 @@ dmypy.json
 elasticsearch/snapshot_cache
 elasticsearch/nodes
 elasticsearch/*.lock
+elasticsearch/_state/
+elasticsearch/indices
