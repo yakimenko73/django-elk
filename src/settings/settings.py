@@ -17,7 +17,21 @@ class DjangoSettings:
         return self
 
 
+@envclass
+@dataclass
+class ELKSettings:
+    version: str = '8.3.1'
+    elastic_host: str = 'localhost'
+    logstash_host: str = 'localhost'
+    kibana_host: str = 'localhost'
+
+    def from_env(self):
+        load_env(self, 'ELK')
+        return self
+
+
 SERVER_SETTINGS = DjangoSettings().from_env()
+ELK_SETTINGS = ELKSettings().from_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -98,6 +112,42 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s] %(levelname)s|%(name)s|%(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'logstash': {
+            'level': 'INFO',
+            'class': 'logstash.TCPLogstashHandler',
+            'host': ELKSettings.logstash_host,
+            'port': 50000,
+            'version': 1,
+            'message_type': 'django',
+            'fqdn': False,
+            'tags': ['django'],
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['logstash', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

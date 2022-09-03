@@ -18,7 +18,7 @@ services:
       tm:
 
   elasticsearch:
-    image: elasticsearch:${ELASTIC_VERSION}
+    image: elasticsearch:${ELK_VERSION}
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
       - ./elasticsearch:/usr/share/elasticsearch/data:z
@@ -33,7 +33,7 @@ services:
       tm:
 
   kibana:
-    image: kibana:${ELASTIC_VERSION}
+    image: kibana:${ELK_VERSION}
     env_file: .env.prod
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
@@ -46,7 +46,7 @@ services:
       - elasticsearch
 
   logstash:
-    image: logstash:${ELASTIC_VERSION}
+    image: logstash:${ELK_VERSION}
     env_file: .env.prod
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z

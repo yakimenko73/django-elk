@@ -1,4 +1,4 @@
-network.host: ${ELASTIC_HOST}
+network.host: ${ELK_ELASTIC_HOST}
 cluster.name: "tm-elastic-cluster"
 discovery.type: single-node
 cluster.routing.allocation.disk.threshold_enabled: false

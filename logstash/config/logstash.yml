@@ -1,1 +1,1 @@
-http.host: ${ELASTIC_LOGSTASH_HOST}
+http.host: ${ELK_LOGSTASH_HOST}
