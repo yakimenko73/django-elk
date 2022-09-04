@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'logs',
 ]
 
 MIDDLEWARE = [
@@ -137,7 +138,7 @@ LOGGING = {
         },
         'logstash': {
             'level': 'INFO',
-            'class': 'settings.logging.handler.StrTCPLogstashHandler',
+            'class': 'settings.logging.handlers.StrTCPLogstashHandler',
             'formatter': 'verbose',
             'host': ELKSettings.logstash_host,
             'port': 50000,
@@ -151,11 +152,7 @@ LOGGING = {
         'django.server': {
             'handlers': ['logstash', 'console'],
             'level': 'INFO',
-        },
-        'settings.urls': {
-            'handlers': ['logstash', 'console'],
-            'level': 'INFO',
-        },
+        }
     }
 }
 
