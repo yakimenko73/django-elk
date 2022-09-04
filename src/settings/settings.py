@@ -118,8 +118,14 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
+        'verbose': {
+            'format': '[{asctime}]|{levelname}|{name:s}|{thread:d}|{message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
         'simple': {
-            'format': '[%(asctime)s] %(levelname)s|%(name)s|%(message)s',
+            'format': '[{asctime}]|{levelname}|{message}',
+            'style': '{',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
     },
@@ -131,20 +137,24 @@ LOGGING = {
         },
         'logstash': {
             'level': 'INFO',
-            'class': 'logstash.TCPLogstashHandler',
+            'class': 'settings.logging.handler.StrTCPLogstashHandler',
+            'formatter': 'verbose',
             'host': ELKSettings.logstash_host,
             'port': 50000,
             'version': 1,
-            'message_type': 'django',
+            'message_type': 'bot',
             'fqdn': False,
-            'tags': ['django'],
+            'tags': ['bot'],
         },
     },
     'loggers': {
-        'django.request': {
+        'django.requests': {
             'handlers': ['logstash', 'console'],
             'level': 'INFO',
-            'propagate': True,
+        },
+        'settings.urls': {
+            'handlers': ['logstash', 'console'],
+            'level': 'INFO',
         },
     }
 }
