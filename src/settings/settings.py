@@ -119,7 +119,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '[{asctime}]|{levelname}|{name:s}|{thread:d}|{message}',
+            'format': '{asctime}|{levelname}|{name:s}|{thread:d}|{message}',
             'style': '{',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
@@ -148,7 +148,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django.requests': {
+        'django.server': {
             'handlers': ['logstash', 'console'],
             'level': 'INFO',
         },
