@@ -1,7 +1,8 @@
 from django.urls import path
 
-from .views import redirect2kibana
+from .views import kibana_stream, kibana_dashboards
 
 urlpatterns = [
-    path('', redirect2kibana)
+    path('', kibana_stream),
+    path('dashboards', kibana_dashboards)
 ]
